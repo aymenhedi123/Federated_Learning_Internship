@@ -16,6 +16,7 @@ Client Containers (2): Each client trains the model locally with their respectiv
 
 ## IV. Requirements
 We used Docker version 26.1.4
+
 We used the following libraries:
 
 - TensorFlow version 2.11.0: An open-source machine learning framework used for training and evaluating the models.
