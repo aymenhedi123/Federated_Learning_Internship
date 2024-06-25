@@ -17,10 +17,10 @@ Client Containers (2): Each client trains the model locally with their respectiv
 ## IV. Requirements
 We use the following libraries:
 
-- TensorFlow: An open-source machine learning framework used for training and evaluating the models.
-- Pandas: A data manipulation and analysis library.
-- NumPy: A library for numerical computations.
-- Flask: A micro web framework for Python used to ensure communication via API for sending weights.
+- TensorFlow V. 2.11.0: An open-source machine learning framework used for training and evaluating the models.
+- Pandas V. 1.5.3: A data manipulation and analysis library.
+- NumPy V. 1.23.5: A library for numerical computations.
+- Flask V.  2.2.2: A micro web framework for Python used to ensure communication via API for sending weights.
 ---
 
 ## V. Script
