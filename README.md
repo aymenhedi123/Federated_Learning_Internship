@@ -15,12 +15,13 @@ Client Containers (2): Each client trains the model locally with their respectiv
 
 
 ## IV. Requirements
-We use the following libraries:
+We used Docker version 26.1.4
+We used the following libraries:
 
-- TensorFlow V. 2.11.0: An open-source machine learning framework used for training and evaluating the models.
-- Pandas V. 1.5.3: A data manipulation and analysis library.
-- NumPy V. 1.23.5: A library for numerical computations.
-- Flask V.  2.2.2: A micro web framework for Python used to ensure communication via API for sending weights.
+- TensorFlow version 2.11.0: An open-source machine learning framework used for training and evaluating the models.
+- Pandas version 1.5.3: A data manipulation and analysis library.
+- NumPy version 1.23.5: A library for numerical computations.
+- Flask version 2.2.2: A micro web framework for Python used to ensure communication via API for sending weights.
 ---
 ## V. Project_Content
 - client1 repository: Contains client1.py, dockerfile.client1, smoking_subset_1.csv.
