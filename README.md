@@ -12,7 +12,7 @@ We use three Docker containers:
 Server Container: Manages the federated learning process and aggregates the model weights.
 Client Containers (2): Each client trains the model locally with their respective subset of data and communicates with the server.
 ![image](https://github.com/aymenhedi123/mini/assets/173182629/5f096fa6-e4f4-4acc-bafa-e5b6fb9857f0)
----
+
 
 ## IV. Requirements
 We use the following libraries:
