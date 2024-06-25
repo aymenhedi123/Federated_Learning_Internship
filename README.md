@@ -6,7 +6,7 @@ Horizontal Federated Learning: Since we have similar subsets of data, we are uti
 FedAvg Method: For updating the global weights, we use the Federated Averaging (FedAvg) method, which calculates the new global model weights.
 
 ![Nouveau projet](https://github.com/aymenhedi123/mini/assets/173182629/fe268b8d-d93e-492b-a651-9f4b2c08c4f6)
----
+
 ## III. Docker Containers
 We use three Docker containers:
 Server Container: Manages the federated learning process and aggregates the model weights.
