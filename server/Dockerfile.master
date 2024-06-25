@@ -1,0 +1,36 @@
+# Use the official Ubuntu 22.04 LTS as the base image
+FROM ubuntu:22.04
+
+# Install required packages
+RUN apt-get update && \
+    apt-get install -y wget bzip2 ca-certificates curl git && \
+    apt-get clean
+
+# Download and install Anaconda
+RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2023.03-Linux-x86_64.sh -O /tmp/anaconda.sh && \
+    /bin/bash /tmp/anaconda.sh -b -p /opt/conda && \
+    rm /tmp/anaconda.sh
+
+# Set environment variable to include Conda in PATH
+ENV PATH /opt/conda/bin:$PATH
+
+# Install TensorFlow via Conda and additional Python packages via pip
+RUN conda install -y tensorflow && \
+    pip install flask numpy
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy necessary files into the container's /app directory
+COPY global_weights.h5 /app/
+COPY master.py /app/
+COPY smoking.csv /app/
+
+# Create a directory for saving the best model
+RUN mkdir -p /app/data
+
+# Expose port 5000 for the Flask application
+EXPOSE 5000
+
+# Command to run the application
+CMD ["python", "master.py"]

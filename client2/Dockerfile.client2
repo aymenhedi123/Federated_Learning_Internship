@@ -1,0 +1,21 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && \
+    apt-get install -y wget bzip2 ca-certificates curl git && \
+    apt-get clean
+
+RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2023.03-Linux-x86_64.sh -O /tmp/anaconda.sh && \
+    /bin/bash /tmp/anaconda.sh -b -p /opt/conda && \
+    rm /tmp/anaconda.sh
+
+ENV PATH /opt/conda/bin:$PATH
+
+RUN conda install -y tensorflow && \
+    pip install tensorflow-federated flask numpy pandas
+
+WORKDIR /app
+
+COPY client2.py /app/
+COPY smoking_subset_2.csv /app/
+
+CMD ["python", "client2.py"]
