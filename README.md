@@ -15,15 +15,25 @@ Client Containers (2): Each client trains the model locally with their respectiv
 
 
 ## IV. Requirements
-We use the following libraries:
+We used Docker version 26.1.4
 
-- TensorFlow V. 2.11.0: An open-source machine learning framework used for training and evaluating the models.
-- Pandas V. 1.5.3: A data manipulation and analysis library.
-- NumPy V. 1.23.5: A library for numerical computations.
-- Flask V.  2.2.2: A micro web framework for Python used to ensure communication via API for sending weights.
+We used the following libraries:
+
+- TensorFlow version 2.11.0: An open-source machine learning framework used for training and evaluating the models.
+- Pandas version 1.5.3: A data manipulation and analysis library.
+- NumPy version 1.23.5: A library for numerical computations.
+- Flask version 2.2.2: A micro web framework for Python used to ensure communication via API for sending weights.
 ---
-
-## V. Script
+## V. Project_Content
+- client1 repository: Contains client1.py, dockerfile.client1, smoking_subset_1.csv.
+- client2 repository: Contains client2.py, dockerfile.client2, smoking_subset_2.csv.
+- server repository: Contains master.py, dockerfile.master, smoking.csv, global_weights.h5(contains initial weights).
+- smoking repository: Contains a set of smoking Datasets.
+- data repository: Contains the best model achieved by the server.
+- docker-compose.yml: Defines and activates the three containers together.
+- README.md: Illustartion of the overall work.
+--- 
+## VI. Script
 ### Docker Files
 - **Dockerfile.master:**
 
@@ -62,7 +72,7 @@ Finally, the container is configured to execute client2.py upon startup using Py
 ### Docker Compose script:
 The Docker Compose file defines and activates the three containers together, creating a network with a bridge driver and setting up the necessary volumes.
 
-## VI. Processing
+## VII. Processing
 1.Clone the Repository:
 
 git clone https://github.com/aymenhedi123/mini.git
