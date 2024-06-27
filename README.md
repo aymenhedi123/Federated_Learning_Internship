@@ -69,7 +69,7 @@ Finally, the container is configured to execute client2.py upon startup using Py
 - It trains the model locally with its subset of data ; in our case it works with "smoking_subset_2.csv"
 - It sends the updated weights and evaluation metrics back to the server
 
-### preprocessing.py
+#### preprocessing.py
 - This file contains required preprocessing for the dataset.
 - In our case this file is common among the cluster (same code).
 
