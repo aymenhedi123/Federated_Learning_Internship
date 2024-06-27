@@ -25,7 +25,7 @@ WORKDIR /app
 COPY global_weights.h5 /app/
 COPY master.py /app/
 COPY smoking.csv /app/
-
+COPY preprocessing.py /app/
 # Create a directory for saving the best model
 RUN mkdir -p /app/data
 

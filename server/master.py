@@ -8,7 +8,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 import pickle
 import os
-
+from preprocessing import drop_null, drop_duplicated, drop_useless_f, x_y_split
 app = Flask(__name__)
 lock = Lock()
 clients_weights = []
@@ -75,16 +75,16 @@ def evaluate_global_model():
     df = pd.read_csv('smoking.csv')
 
     # Preprocess the dataset
-    df.drop(columns=['ID', 'oral'], inplace=True)
+    if df.isnull().sum().any():
+        df = drop_null(df)
 
-    label_encoder = LabelEncoder()
-    df['gender'] = label_encoder.fit_transform(df['gender'])
-    df['tartar'] = label_encoder.fit_transform(df['tartar'])
+    if df.duplicated().sum() > 0:
+        df = drop_duplicated(df)
 
-    X = df.drop('y', axis=1).values
-    y = df['y'].values
-
+    df = drop_useless_f(df)
+    X,y = x_y_split(df)
     scaler = StandardScaler()
+    
     X = scaler.fit_transform(X)
 
     # Evaluate the model
