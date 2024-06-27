@@ -25,9 +25,9 @@ We used the following libraries:
 - Flask version 2.2.2: A micro web framework for Python used to ensure communication via API for sending weights.
 ---
 ## V. Project_Content
-- client1 repository: Contains client1.py, dockerfile.client1, smoking_subset_1.csv.
-- client2 repository: Contains client2.py, dockerfile.client2, smoking_subset_2.csv.
-- server repository: Contains master.py, dockerfile.master, smoking.csv, global_weights.h5(contains initial weights).
+- client1 repository: Contains client1.py, dockerfile.client1, smoking_subset_1.csv, preprocessing.py.
+- client2 repository: Contains client2.py, dockerfile.client2, smoking_subset_2.csv, preprocessing.py.
+- server repository: Contains master.py, dockerfile.master, smoking.csv, global_weights.h5(contains initial weights), preprocessing.py.
 - smoking repository: Contains a set of smoking Datasets.
 - data repository: Contains the best model achieved by the server.
 - docker-compose.yml: Defines and activates the three containers together.
@@ -68,6 +68,10 @@ Finally, the container is configured to execute client2.py upon startup using Py
 - The client2 receives the global weights
 - It trains the model locally with its subset of data ; in our case it works with "smoking_subset_2.csv"
 - It sends the updated weights and evaluation metrics back to the server
+
+### preprocessing.py
+- This file contains required preprocessing for the dataset.
+- In our case this file is common among the cluster (same code).
 
 ### Docker Compose script:
 The Docker Compose file defines and activates the three containers together, creating a network with a bridge driver and setting up the necessary volumes.
