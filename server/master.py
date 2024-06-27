@@ -13,16 +13,16 @@ app = Flask(__name__)
 lock = Lock()
 clients_weights = []
 clients_losses = []
-clients_updates = 0  # Track the number of clients that have sent updates
-total_clients = 2  # Total number of clients expected to send updates
+clients_updates = 0  
+total_clients = 2  # Total number of clients expected to send updates , in our case the number of clients equal to 2
 
 # Initialize the best model metrics
 best_loss = float('inf')
 best_accuracy = 0.0
 
-# Define and compile the model
+
 model = Sequential([
-    Dense(64, activation='relu', input_shape=(24,)),  # Adjust input_shape as per your features
+    Dense(64, activation='relu', input_shape=(24,)), 
     Dense(32, activation='relu'),
     Dense(32, activation='relu'),
     Dense(32, activation='relu'),
@@ -30,7 +30,7 @@ model = Sequential([
 ])
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-# Load the pre-trained weights
+# Loading the pre-trained weights
 if os.path.exists('global_weights.h5'):
     model.load_weights('global_weights.h5')
     print("Loaded initial model weights from global_weights.h5")
@@ -63,7 +63,7 @@ def update_weights():
     # Check if all clients have sent their updates for this iteration
     if clients_updates == total_clients:
         federated_averaging()
-        clients_updates = 0  # Reset the counter for the next iteration
+        clients_updates = 0  
 
     return jsonify({'status': 'success', 'message': 'Client weights and loss received'})
 
@@ -74,7 +74,7 @@ def evaluate_global_model():
     # Load the test dataset
     df = pd.read_csv('smoking.csv')
 
-    # Preprocess the dataset
+    # Preprocessing
     if df.isnull().sum().any():
         df = drop_null(df)
 
@@ -87,7 +87,7 @@ def evaluate_global_model():
     
     X = scaler.fit_transform(X)
 
-    # Evaluate the model
+    # Model evaluation
     loss, accuracy = model.evaluate(X, y, verbose=0)
 
     print(f'Evaluation results - Loss: {loss}, Accuracy: {accuracy}')
@@ -115,7 +115,7 @@ def federated_averaging():
 
     with lock:
         if clients_weights:
-            # Average each layer's weights across all clients
+            # Average each layer's weights across all clients , in our case we used mean as combination method
             new_weights = [np.mean([client_weights[layer] for client_weights in clients_weights], axis=0) for layer in range(len(clients_weights[0]))]
             model.set_weights(new_weights)
             clients_weights = []  # Clear the weights for next iteration

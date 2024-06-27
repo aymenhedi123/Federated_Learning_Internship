@@ -17,5 +17,6 @@ WORKDIR /app
 
 COPY client1.py /app/
 COPY smoking_subset_1.csv /app/
+COPY preprocessing.py /app/
 
 CMD ["python", "client1.py"]

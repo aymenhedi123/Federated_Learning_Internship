@@ -6,8 +6,8 @@ from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from time import sleep
+from preprocessing import drop_null, drop_duplicated, drop_useless_f, x_y_split
 
-# Define the client model
 model = Sequential([
     Dense(64, activation='relu', input_shape=(24,)),
     Dense(32, activation='relu'),
@@ -17,7 +17,7 @@ model = Sequential([
 ])
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-# Function to fetch model weights with retries
+# Fetching server_model weights with retries
 def get_model_with_retries(url, max_retries=5, backoff=5):
     for attempt in range(max_retries):
         try:
@@ -31,29 +31,26 @@ def get_model_with_retries(url, max_retries=5, backoff=5):
             else:
                 raise
 
-# Function to send updated model weights to the master
+# Sending updated model weights to the master
 def send_updated_model(update_url_weights, updated_weights, loss, accuracy):
     weights_serializable = [w.tolist() for w in updated_weights]
     response = requests.post(update_url_weights, json={'weights': weights_serializable, 'loss': loss, 'accuracy': accuracy})
     response.raise_for_status()
     print(f"Updated model sent to {update_url_weights}, response: {response.json()}")
 
-# Fetch model weights from master
+# Preprocessing and evaluation
 def main():
     print("Reading data")
     df = pd.read_csv('smoking_subset_1.csv')
     print(df.head())
+    if df.isnull().sum().any():
+        df = drop_null(df)
 
-    # Prepare the data
-    from sklearn.preprocessing import LabelEncoder
-    df.drop(columns=['ID', 'oral'], inplace=True)
+    if df.duplicated().sum() > 0:
+        df = drop_duplicated(df)
 
-    label_encoder = LabelEncoder()
-    df['gender'] = label_encoder.fit_transform(df['gender'])
-    df['tartar'] = label_encoder.fit_transform(df['tartar'])
-
-    X = df.drop('y', axis=1).values
-    y = df['y'].values
+    df = drop_useless_f(df)
+    X,y = x_y_split(df)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     scaler = StandardScaler()
@@ -92,7 +89,7 @@ def main():
 
         updated_weights = model.get_weights()
 
-        # Print the updated weights for debugging
+        
         print(f"Client {iteration + 1} updated weights (first layer first neuron): {updated_weights[0][0]}")
 
         send_updated_model(update_url_weights, updated_weights, loss, accuracy)
@@ -101,7 +98,7 @@ def main():
             print("Early stopping criteria met. Stopping local training.")
             break
 
-    print("Client training completed.")
+    print("Client1 training completed.")
 
 if __name__ == "__main__":
     main()
