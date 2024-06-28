@@ -14,7 +14,7 @@ lock = Lock()
 clients_weights = []
 clients_losses = []
 clients_updates = 0  
-total_clients = 2  # Total number of clients expected to send updates , in our case the number of clients equal to 2
+total_clients = 2  # in our case the number of clients equal to 2
 
 # Initialize the best model metrics
 best_loss = float('inf')
@@ -126,9 +126,6 @@ def federated_averaging():
             evaluate_global_model()
             print("Global model evaluated after federated averaging")
 
-        # Early stopping check
-        if all(loss < 0.35 for loss in clients_losses):
-            print("Early stopping criteria met. Stopping federated learning.")
 
 def save_best_model():
     # Save the best model weights in a pickle file

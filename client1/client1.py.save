@@ -5,9 +5,9 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from time import sleep, time
+from time import sleep
 from preprocessing import drop_null, drop_duplicated, drop_useless_f, x_y_split
-
+from time import time,sleep
 model = Sequential([
     Dense(64, activation='relu', input_shape=(24,)),
     Dense(32, activation='relu'),
@@ -50,7 +50,7 @@ def main():
         df = drop_duplicated(df)
 
     df = drop_useless_f(df)
-    X, y = x_y_split(df)
+    X,y = x_y_split(df)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     scaler = StandardScaler()
@@ -61,14 +61,12 @@ def main():
     update_url_weights = 'http://master:5000/update_weights'
     max_iterations = 20
     for iteration in range(max_iterations):
-        start_time = time()  # Start timing the iteration
-        
+        start_time=time() #start timing the iteration
         response = get_model_with_retries(url)
         weights = response.json()['weights']
         weights = [tf.convert_to_tensor(w) for w in weights]
         model.set_weights(weights)
         print(f"Model weights set in client from the master server, iteration {iteration + 1}")
-
         best_accuracy = 0.0
         best_weights = None
 
@@ -83,7 +81,7 @@ def main():
         print("Local training completed")
 
         loss, accuracy = model.evaluate(X_test, y_test)
-        print(f'Iteration {iteration + 1}: Test Loss: {loss}, Test Accuracy: {accuracy}')
+        print(f'Test Loss: {loss}, Test Accuracy: {accuracy}')
 
         if best_weights is not None:
             model.set_weights(best_weights)
@@ -91,6 +89,7 @@ def main():
 
         updated_weights = model.get_weights()
 
+        
         print(f"Client {iteration + 1} updated weights (first layer first neuron): {updated_weights[0][0]}")
 
         send_updated_model(update_url_weights, updated_weights, loss, accuracy)
@@ -98,13 +97,10 @@ def main():
         if loss < 0.2:
             print("Early stopping criteria met. Stopping local training.")
             break
-        
         end_time = time()  # End timing the iteration
         iteration_time = end_time - start_time
-        print(f"Client 1: Iteration {iteration + 1} took {iteration_time:.2f} seconds")
-
+        print(f"Client 1 : Iteration {iteration + 1} took {iteration_time:.2f} seconds")
     print("Client1 training completed.")
 
 if __name__ == "__main__":
     main()
-

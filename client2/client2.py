@@ -5,7 +5,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from time import sleep
+from time import sleep, time
 from preprocessing import drop_null, drop_duplicated, drop_useless_f, x_y_split
 
 model = Sequential([
@@ -17,7 +17,7 @@ model = Sequential([
 ])
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-# fetching server_model weights 
+# Fetching server_model weights with retries
 def get_model_with_retries(url, max_retries=5, backoff=5):
     for attempt in range(max_retries):
         try:
@@ -38,12 +38,11 @@ def send_updated_model(update_url_weights, updated_weights, loss, accuracy):
     response.raise_for_status()
     print(f"Updated model sent to {update_url_weights}, response: {response.json()}")
 
-# preprocessing and evaluation
+# Preprocessing and evaluation
 def main():
     print("Reading data")
     df = pd.read_csv('smoking_subset_2.csv')
     print(df.head())
-
     if df.isnull().sum().any():
         df = drop_null(df)
 
@@ -51,7 +50,7 @@ def main():
         df = drop_duplicated(df)
 
     df = drop_useless_f(df)
-    X,y = x_y_split(df)
+    X, y = x_y_split(df)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     scaler = StandardScaler()
@@ -62,6 +61,8 @@ def main():
     update_url_weights = 'http://master:5000/update_weights'
     max_iterations = 20
     for iteration in range(max_iterations):
+        start_time = time()  # Start timing the iteration
+        
         response = get_model_with_retries(url)
         weights = response.json()['weights']
         weights = [tf.convert_to_tensor(w) for w in weights]
@@ -82,7 +83,7 @@ def main():
         print("Local training completed")
 
         loss, accuracy = model.evaluate(X_test, y_test)
-        print(f'Test Loss: {loss}, Test Accuracy: {accuracy}')
+        print(f'Iteration {iteration + 1}: Test Loss: {loss}, Test Accuracy: {accuracy}')
 
         if best_weights is not None:
             model.set_weights(best_weights)
@@ -90,7 +91,6 @@ def main():
 
         updated_weights = model.get_weights()
 
-      
         print(f"Client {iteration + 1} updated weights (first layer first neuron): {updated_weights[0][0]}")
 
         send_updated_model(update_url_weights, updated_weights, loss, accuracy)
@@ -98,8 +98,13 @@ def main():
         if loss < 0.2:
             print("Early stopping criteria met. Stopping local training.")
             break
+        
+        end_time = time()  # End timing the iteration
+        iteration_time = end_time - start_time
+        print(f"Client 2: Iteration {iteration + 1} took {iteration_time:.2f} seconds")
 
-    print("Client 2 training completed.")
+    print("Client1 training completed.")
 
 if __name__ == "__main__":
     main()
+
