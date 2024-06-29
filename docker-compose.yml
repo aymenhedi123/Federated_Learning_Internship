@@ -16,7 +16,7 @@ services:
       timeout: 10s
       retries: 5
     volumes:
-      - /home/user/yrawah/data:/app/data  # Ensure this path matches where you're saving the model
+      - /home/user/fedretaed_learning/model:/app/model  
 
   client1:
     build:

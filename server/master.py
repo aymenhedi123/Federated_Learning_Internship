@@ -130,7 +130,7 @@ def federated_averaging():
 def save_best_model():
     # Save the best model weights in a pickle file
     weights = model.get_weights()
-    with open('/app/data/best_model.pkl', 'wb') as f:
+    with open('/app/model/best_model.pkl', 'wb') as f:
         pickle.dump(weights, f)
     print("Best model saved with loss:", best_loss, "and accuracy:", best_accuracy)
 

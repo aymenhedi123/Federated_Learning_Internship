@@ -12,7 +12,7 @@ RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2023.03-Linux-x86_6
     rm /tmp/anaconda.sh
 
 # Set environment variable to include Conda in PATH
-ENV PATH /opt/conda/bin:$PATH
+ENV PATH=/opt/conda/bin:$PATH
 
 # Install TensorFlow via Conda and additional Python packages via pip
 RUN conda install -y tensorflow && \
@@ -27,7 +27,7 @@ COPY master.py /app/
 COPY smoking.csv /app/
 COPY preprocessing.py /app/
 # Create a directory for saving the best model
-RUN mkdir -p /app/data
+RUN mkdir -p /app/model
 
 # Expose port 5000 for the Flask application
 EXPOSE 5000

@@ -8,7 +8,7 @@ RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2023.03-Linux-x86_6
     /bin/bash /tmp/anaconda.sh -b -p /opt/conda && \
     rm /tmp/anaconda.sh
 
-ENV PATH /opt/conda/bin:$PATH
+ENV PATH=/opt/conda/bin:$PATH
 
 RUN conda install -y tensorflow && \
     pip install tensorflow-federated flask numpy pandas
